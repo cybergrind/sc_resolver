@@ -19,8 +19,9 @@ object BuildSettings {
     scalaVersion := buildScalaVersion,
     scalacOptions += "",
     fork in test := true,
-    resolvers := Seq(jbossRepo, akkaRepo, sonatypeRepo))
-  //val mainClass = Some("wgrm.resolver.Main")
+    resolvers := Seq(jbossRepo, akkaRepo, sonatypeRepo),
+    mainClass in Compile := Some("wgrm.resolver.Main")
+  )
 
   val projectSettings = Defaults.defaultSettings ++ globalSettings
 }
@@ -44,7 +45,7 @@ object ResolverBuild extends Build {
 
   lazy val root = Project("resolver-root",
     file("."),
-    settings = projectSettings) aggregate(core)
+    settings = projectSettings) dependsOn(core)
 
   lazy val core = Project("resolver-core",
     file("core"),
