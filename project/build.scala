@@ -20,6 +20,7 @@ object BuildSettings {
     scalacOptions += "",
     fork in test := true,
     resolvers := Seq(jbossRepo, akkaRepo, sonatypeRepo),
+    libraryDependencies ++= Seq(scalatest),
     mainClass in Compile := Some("wgrm.resolver.Main")
   )
 
@@ -34,6 +35,7 @@ object Resolvers {
 
 
 object Dependencies {
+  val scalatest = "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"
 }
 
 object ResolverBuild extends Build {
