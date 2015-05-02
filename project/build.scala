@@ -19,7 +19,7 @@ object BuildSettings {
     scalaVersion := buildScalaVersion,
     scalacOptions += "",
     fork in test := true,
-    resolvers := Seq(jbossRepo, akkaRepo, sonatypeRepo),
+    resolvers := Seq(jbossRepo, akkaRepo, sonatypeRepo, sonatypePublic),
     libraryDependencies ++= Seq(scalatest),
     mainClass in Compile := Some("wgrm.resolver.Main")
   )
@@ -31,11 +31,13 @@ object Resolvers {
   val sonatypeRepo = "Sonatype Release" at "http://oss.sonatype.org/content/repositories/releases"
   val jbossRepo = "JBoss" at "http://repository.jboss.org/nexus/content/groups/public/"
   val akkaRepo = "Akka" at "http://repo.akka.io/repository/"
+  val sonatypePublic = "Sonatype Public" at "http://oss.sonatype.org/content/groups/public/"
 }
 
 
 object Dependencies {
   val scalatest = "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"
+  var snakeyaml = "org.yaml" % "snakeyaml" % "1.15"
 }
 
 object ResolverBuild extends Build {
@@ -51,5 +53,7 @@ object ResolverBuild extends Build {
 
   lazy val core = Project("resolver-core",
     file("core"),
-    settings = projectSettings)
+    settings = projectSettings ++
+      Seq(libraryDependencies ++= Seq(snakeyaml))
+  )
 }
