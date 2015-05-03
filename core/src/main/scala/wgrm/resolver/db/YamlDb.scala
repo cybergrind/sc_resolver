@@ -23,31 +23,46 @@ class YamlDb extends RealmDb {
     this.r = r
   }
 
-  def get(a: Any, what:String): Any = a match {
+  def get(a: Any, what:String): Option[Any] = a match {
+    case s: Some[LinkedHashMap[String, Any]] =>
+      //println("We get LinkedHashMap")
+      val extracted = s.get
+      extracted.containsKey(what) match {
+        case true => Some(extracted.get(what))
+        case false => None
+      }
     case s: LinkedHashMap[String, Any] =>
       //println("We get LinkedHashMap")
-      s.get(what)
+      s.containsKey(what) match {
+        case true => Some(s.get(what))
+        case false => None
+      }
     case s: Any =>
       println("We get: c=".concat(s.getClass.toString))
-      s
-    case null =>
+      Some(s)
+    case _ =>
       println("We get: null")
-      null.asInstanceOf[Any]
+      None
   }
 
-  def getByPath(path:String): String = {
+  def getByPath(path:String): Option[String] = {
     path.split('.').fold(this.r.asInstanceOf[Any])(
       (x:Any, y:Any) => {
-        this.get(x, y.asInstanceOf[String]).asInstanceOf[Any]
-      }).asInstanceOf[String]
+        x match {
+          case Some(yaml_part) =>
+            this.get(yaml_part, y.asInstanceOf[String]).asInstanceOf[Any]
+          case _ =>
+            return None
+        }
+      }).asInstanceOf[Option[String]]
   }
 
   def getCurrentVersion(project:String):Option[String] = {
-    var r = Some(this.getByPath(s"$project.components_redefines.$project.version"))
+    var r = this.getByPath(s"$project.components_redefines.$project.version")
     println(r.getClass)
     return r
   }
   def getCurrentVersion(game:String, project: String):Option[String] = {
-    Some(this.getByPath(s"$game.$project.components_redefines.$project.version"))
+    this.getByPath(s"$game.$project.components_redefines.$project.version")
   }
 }

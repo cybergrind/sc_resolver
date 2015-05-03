@@ -35,11 +35,11 @@ class YamlTest extends ResolverSpec {
         info("Create new object")
         val yamlDb = new YamlDb
         info("set realm to ru")
-        yamlDb.setRealm("ru")
+        yamlDb.setRealm("wgt1")
         info("get spa version")
         assert(yamlDb.getCurrentVersion("spa") != Some("ok"))
         info("we get version instead default")
-        assert(yamlDb.getCurrentVersion("wot", "aap2").getOrElse("asdf") === Some(null))
+        assert(yamlDb.getCurrentVersion("wot", "aap2").getOrElse("no") === "no")
         assert(yamlDb.getCurrentVersion("wot", "aap") !== "ok")
       }
     }
