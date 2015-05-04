@@ -1,5 +1,10 @@
 import sbt._
+import sbt.Keys._
 import Keys._
+import play.PlayScala
+//import play.forkrun.protocol.{ ForkConfig, PlayServerStarted, Serializers }
+//import play.core.server.NettyServer
+
 
 // https://github.com/typesafehub/webwords/blob/master/project/Build.scala
 // https://github.com/sbt/sbt-start-script
@@ -19,12 +24,14 @@ object BuildSettings {
     scalaVersion := buildScalaVersion,
     scalacOptions += "",
     fork in test := true,
-    resolvers := Seq(jbossRepo, akkaRepo, sonatypeRepo, sonatypePublic),
-    libraryDependencies ++= Seq(scalatest),
-    mainClass in Compile := Some("wgrm.resolver.Main")
+    resolvers := Seq(jbossRepo, akkaRepo, sonatypeRepo, sonatypePublic, typesafe,
+      typesafe_mvn),
+    libraryDependencies ++= Seq(scalatest)
+//    mainClass in Compile := Some("wgrm.resolver.Main")
   )
 
-  val projectSettings = Defaults.defaultSettings ++ globalSettings
+  //val projectSettings = Defaults.defaultSettings ++ globalSettings
+  val projectSettings = globalSettings
 }
 
 object Resolvers {
@@ -33,13 +40,13 @@ object Resolvers {
   val akkaRepo = "Akka" at "http://repo.akka.io/repository/"
   val sonatypePublic = "Sonatype Public" at "http://oss.sonatype.org/content/groups/public/"
   val typesafe = "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/"
+  val typesafe_mvn = "Typesafe maven" at "http://repo.typesafe.com/typesafe/maven-releases/"
 }
 
 
 object Dependencies {
   val scalatest = "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"
   val snakeyaml = "org.yaml" % "snakeyaml" % "1.15"
-  val play = "com.typesafe.play" % "sbt-plugin" % "2.3.8"
 }
 
 object ResolverBuild extends Build {
@@ -47,7 +54,7 @@ object ResolverBuild extends Build {
   import Dependencies._
   import Resolvers._
 
-  override lazy val settings = super.settings ++ globalSettings
+  //override lazy val settings = super.settings ++ globalSettings
 
   lazy val root = Project("resolver-root",
     file("."),
