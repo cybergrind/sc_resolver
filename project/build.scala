@@ -32,12 +32,14 @@ object Resolvers {
   val jbossRepo = "JBoss" at "http://repository.jboss.org/nexus/content/groups/public/"
   val akkaRepo = "Akka" at "http://repo.akka.io/repository/"
   val sonatypePublic = "Sonatype Public" at "http://oss.sonatype.org/content/groups/public/"
+  val typesafe = "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/"
 }
 
 
 object Dependencies {
   val scalatest = "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"
-  var snakeyaml = "org.yaml" % "snakeyaml" % "1.15"
+  val snakeyaml = "org.yaml" % "snakeyaml" % "1.15"
+  val play = "com.typesafe.play" % "sbt-plugin" % "2.3.8"
 }
 
 object ResolverBuild extends Build {
