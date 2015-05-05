@@ -1,11 +1,8 @@
 package wgrm.resolver
 
-
 import org.scalatest._
 
 import wgrm.resolver.db._
-
-
 
 abstract class ResolverSpec extends FreeSpec with Matchers
 
@@ -20,7 +17,7 @@ class SampleTest extends ResolverSpec {
         assert(Main.for_test === "for_test")
       }
       "should produce TestFailedException for assertion" in {
-        intercept [TestFailedException] {
+        intercept[TestFailedException] {
           assert(Main.for_test === "for_test")
         }
       }

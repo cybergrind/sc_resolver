@@ -11,9 +11,6 @@ val scalatest = "org.scalatest" % "scalatest_2.11" % "2.2.4" % Test
 val snakeyaml = "org.yaml" % "snakeyaml" % "1.15"
 
 
-
-
-
 val commonSettings = Seq(
   organization := "wgrm",
   version := "0.1",
