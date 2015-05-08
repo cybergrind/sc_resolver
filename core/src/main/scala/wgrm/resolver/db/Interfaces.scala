@@ -1,5 +1,6 @@
 package wgrm.resolver.db
 
+
 trait RealmDb {
   //var realm:Any
 

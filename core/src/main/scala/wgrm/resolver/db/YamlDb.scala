@@ -4,8 +4,11 @@ import java.util.{ LinkedHashMap }
 
 import org.yaml.snakeyaml.{ Yaml }
 
+import wgrm.resolver.Const
+
+
 class YamlDb extends RealmDb {
-  var r: LinkedHashMap[String, Any] = null
+  var data: LinkedHashMap[String, Any] = null
 
   def load_file(fname: String): String = {
     val src = scala.io.Source.fromFile(fname)
@@ -17,21 +20,20 @@ class YamlDb extends RealmDb {
 
   def setRealm(realm: String) = {
     val parser = new Yaml
-    var r = parser.load(this.load_file(realm.concat(".yaml")))
+    val data = parser.load(this.load_file(realm.concat(".yaml")))
       .asInstanceOf[LinkedHashMap[String, Any]]
-    this.r = r
+    this.data = data
   }
+
   case class LHM(value: LinkedHashMap[String, Any])
+
   def get(a: Any, what: String): Option[Any] = a match {
-    //case s: Some[LinkedHashMap[String, Any]] =>
     case Some(LHM(s)) =>
-      //println("We get LinkedHashMap")
       s.containsKey(what) match {
         case true => Some(s.get(what))
         case false => None
       }
     case LHM(s) =>
-      //println("We get LinkedHashMap")
       s.containsKey(what) match {
         case true => Some(s.get(what))
         case false => None
@@ -45,7 +47,7 @@ class YamlDb extends RealmDb {
   }
 
   def getByPath(path: String): Option[String] = {
-    path.split('.').fold(this.r.asInstanceOf[Any])(
+    path.split('.').fold(this.data.asInstanceOf[Any])(
       (x: Any, y: Any) => {
         x match {
           case Some(yaml_part) =>
@@ -62,7 +64,31 @@ class YamlDb extends RealmDb {
     println(r.getClass)
     return r
   }
+
   def getCurrentVersion(game: String, project: String): Option[String] = {
     this.getByPath(s"$game.$project.components_redefines.$project.version")
+  }
+
+  def findByMask(mask:String): List[String] = {
+    /* "*.component_redefines" => List[ProjectsStrings] */
+    var ret: List[String] = List()
+    var path_position: Option[String] = None
+    val splitted = mask.split(".")
+    splitted.map(part => {
+      part match {
+        case "*" =>
+          path_position
+      }
+    })
+    return ret
+  }
+
+  def findAllProjects(): List[String] = {
+    var ret: List[String] = List()
+    ret = this.findByMask("*.components_redefines")
+    Const.GAMES.map(x => {
+      ret ++= this.findByMask(s"$x.*.components_redefines")
+    })
+    return ret
   }
 }
